@@ -1,0 +1,31 @@
+name: Deploy to GCP using Pub/Sub
+
+on:
+  push:
+    branches:
+      - main  # ทำงานเมื่อมีการ Push ไปที่ main branch
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker with GCR
+        run: gcloud auth configure-docker gcr.io
+
+      - name: Build & Push Docker Image
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/gameweb:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/gameweb:latest
+
+      - name: Publish message to Pub/Sub
+        run: |
+          gcloud pubsub topics publish gameweb-cicd --message="New update available!"
