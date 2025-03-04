@@ -28,4 +28,5 @@ jobs:
 
       - name: Publish message to Pub/Sub
         run: |
-          gcloud pubsub topics publish gameweb-cicd --message="New update available!"
+          gcloud pubsub topics publish gameweb-cicd --message="New update available 1!"
+          gcloud pubsub topics publish gameweb-cicd --message="New update available 2!"
