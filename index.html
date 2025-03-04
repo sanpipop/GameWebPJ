@@ -12,10 +12,17 @@
     </header>
     <div id="vm-info"></div>
     <script>
-        fetch('/vm_info.html')
-            .then(response => response.text())
-            .then(data => document.getElementById('vm-info').innerHTML = data);
+        function updateVMInfo() {
+            fetch('/vm_info.html?' + new Date().getTime())  
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('vm-info').innerHTML = data;
+                });
+        }
+        // โหลดข้อมูลแค่ตอนเปิดเว็บใหม่ หรือเมื่อเปลี่ยน VM
+        window.onload = updateVMInfo;
     </script>
+    
     <div class="game-grid">
         <div class="game-card">
             <img src="game_pictures/evil-glitch.png" alt="Evil Glitch">
