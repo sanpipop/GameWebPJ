@@ -8,16 +8,14 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to the JavaScript Game Hub do this!</h1>
+        <h1>Welcome to the JavaScript Game Hub try!!</h1>
     </header>
     <div id="vm-info"></div>
     <script>
         function updateVMInfo() {
-            fetch('/vm_info.html?' + new Date().getTime())  
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('vm-info').innerHTML = data;
-                });
+            fetch('/vm_info.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('vm-info').innerHTML = data);
         }
         // โหลดข้อมูลแค่ตอนเปิดเว็บใหม่ หรือเมื่อเปลี่ยน VM
         window.onload = updateVMInfo;
