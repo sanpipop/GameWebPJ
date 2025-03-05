@@ -13,13 +13,19 @@
     <div id="vm-info"></div>
     <script>
         function updateVMInfo() {
-            fetch('https://hub2-7588742506.asia-southeast1.run.app?' + new Date().getTime())
-            fetch('/vm_info.html?' + new Date().getTime())  // ป้องกัน Cache
-            .then(response => response.text())
-            .then(data => document.getElementById('vm-info').innerHTML = data);
+        Promise.all([
+            fetch('https://hub2-7588742506.asia-southeast1.run.app?' + new Date().getTime()),
+            fetch('/vm_info.html?' + new Date().getTime()).then(response => response.text())
+        ])
+        .then(([response1, data]) => {
+            document.getElementById('vm-info').innerHTML = data;
+        })
+        .catch(error => console.error('Error fetching data:', error));
         }
+
         // โหลดข้อมูลทุกครั้งที่เปิดเว็บ
         window.onload = updateVMInfo;
+
     </script>
     
     <div class="game-grid">
