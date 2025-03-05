@@ -13,32 +13,41 @@
     <div id="vm-info"></div>
     <script>
         function updateVMInfo() {
-            // ตรวจสอบว่ามี popupShown ใน localStorage หรือไม่
-            let popupShown = localStorage.getItem('popupShown');
+            // เช็คว่า API ถูกเรียกไปแล้วหรือยัง
+            const hasFetchedAPI = localStorage.getItem("hasFetchedAPI");
     
-            // ดึงข้อมูลจาก Cloud Run API และไฟล์ /vm_info.html
-            Promise.all([
-                fetch('https://hub2-7588742506.asia-southeast1.run.app?'),
-                fetch('/vm_info.html?' + new Date().getTime()).then(response => response.text())
-            ])
-            .then(([response1, data]) => {
-                // ถ้ายังไม่เคยแสดง Popup ให้ดึงข้อมูลจาก API มาแสดง
-                if (!popupShown) {
-                    response1.text().then(apiData => {
+            let fetchPromises = [];
+    
+            // ถ้ายังไม่เคยเรียก API, ให้ fetch() และบันทึกค่า
+            if (!hasFetchedAPI) {
+                fetchPromises.push(
+                    fetch('https://hub2-7588742506.asia-southeast1.run.app')
+                    .then(response => response.text())
+                    .then(apiData => {
                         alert(apiData); // แสดงข้อมูลจาก Cloud Run API เป็น Popup
-                        localStorage.setItem('popupShown', 'true'); // บันทึกค่าเพื่อไม่ให้แสดงอีก
-                    });
-                }
+                        localStorage.setItem("hasFetchedAPI", "true"); // บันทึกว่าเรียก API แล้ว
+                    })
+                );
+            }
     
-                // แสดงข้อมูลจากไฟล์ /vm_info.html ใน element ที่มี id="vm-info"
-                document.getElementById('vm-info').innerHTML = data;
-            })
+            // Fetch ไฟล์ /vm_info.html ทุกครั้ง
+            fetchPromises.push(
+                fetch('/vm_info.html?' + new Date().getTime())
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('vm-info').innerHTML = data;
+                })
+            );
+    
+            // รอให้ทุก fetch() ทำงานเสร็จ
+            Promise.all(fetchPromises)
             .catch(error => console.error('Error fetching data:', error));
         }
     
         // โหลดข้อมูลทุกครั้งที่เปิดเว็บ
         window.onload = updateVMInfo;
     </script>
+    
     
     <div class="game-grid">
         <div class="game-card">
