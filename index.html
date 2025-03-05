@@ -13,17 +13,24 @@
     <div id="vm-info"></div>
     <script>
         function updateVMInfo() {
-            // ถ้ายังไม่มี popupShown ใน localStorage ให้บันทึกค่า
-            if (!localStorage.getItem('popupShown')) {
-                localStorage.setItem('popupShown', 'true'); // บันทึกค่าเพื่อไม่ให้แสดงอีก
-            }
+            // ตรวจสอบว่ามี popupShown ใน localStorage หรือไม่
+            let popupShown = localStorage.getItem('popupShown');
     
-            // Fetch ข้อมูลจาก Cloud Run
+            // ดึงข้อมูลจาก Cloud Run API และไฟล์ /vm_info.html
             Promise.all([
                 fetch('https://hub2-7588742506.asia-southeast1.run.app?'),
                 fetch('/vm_info.html?' + new Date().getTime()).then(response => response.text())
             ])
             .then(([response1, data]) => {
+                // ถ้ายังไม่เคยแสดง Popup ให้ดึงข้อมูลจาก API มาแสดง
+                if (!popupShown) {
+                    response1.text().then(apiData => {
+                        alert(apiData); // แสดงข้อมูลจาก Cloud Run API เป็น Popup
+                        localStorage.setItem('popupShown', 'true'); // บันทึกค่าเพื่อไม่ให้แสดงอีก
+                    });
+                }
+    
+                // แสดงข้อมูลจากไฟล์ /vm_info.html ใน element ที่มี id="vm-info"
                 document.getElementById('vm-info').innerHTML = data;
             })
             .catch(error => console.error('Error fetching data:', error));
