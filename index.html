@@ -14,7 +14,7 @@
     <script>
         function updateVMInfo() {
         Promise.all([
-            fetch('https://hub2-7588742506.asia-southeast1.run.app?' + new Date().getTime()),
+            fetch('https://hub2-7588742506.asia-southeast1.run.app?'),
             fetch('/vm_info.html?' + new Date().getTime()).then(response => response.text())
         ])
         .then(([response1, data]) => {
