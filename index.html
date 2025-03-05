@@ -12,22 +12,14 @@
     </header>
     <div id="vm-info"></div>
     <script>
-        function updateTime() {
-            // ทำการ fetch ข้อมูลจาก Cloud Run
-            fetch('https://hub2-7588742506.asia-southeast1.run.app?' + new Date().getTime())  
-            .then(response => response.text())  // รับข้อมูลจาก API เป็นข้อความ
-            .then(data => {
-                // แสดงข้อมูลที่ได้จาก API ใน HTML element ที่มี id="vm-info"
-                document.getElementById('vm-info').innerHTML = data;
-            })
-            .catch(error => {
-                // หากมีข้อผิดพลาดในการดึงข้อมูล แสดงข้อความนี้แทน
-                document.getElementById('vm-info').innerHTML = "<p>Error loading time</p>";
-            });
+        function updateVMInfo() {
+            fetch('https://hub2-7588742506.asia-southeast1.run.app?' + new Date().getTime())
+            fetch('/vm_info.html?' + new Date().getTime())  // ป้องกัน Cache
+            .then(response => response.text())
+            .then(data => document.getElementById('vm-info').innerHTML = data);
         }
-    
-        // เรียกใช้ฟังก์ชัน updateTime ทันทีที่หน้าเว็บโหลด
-        window.onload = updateTime;
+        // โหลดข้อมูลทุกครั้งที่เปิดเว็บ
+        window.onload = updateVMInfo;
     </script>
     
     <div class="game-grid">
