@@ -23,6 +23,10 @@ header {
     margin-bottom: 5px;
 }
 
+footer {
+    padding-top: 50px;
+}
+
 h1 {
     font-size: 3rem;
     color: #00ffff;
